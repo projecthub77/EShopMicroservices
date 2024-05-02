@@ -1,5 +1,7 @@
 ﻿
 //nella Cartella Products con la Vertical Slice Architecture raggruppiamo tutti i casi d'uso di un oggetto.
+using FluentValidation;
+
 namespace Catalog.API.Products.CreateProduct
 {
     public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price)
@@ -19,16 +21,21 @@ namespace Catalog.API.Products.CreateProduct
         }
     }
 
-    public class CreateProductCommandHandler (IDocumentSession session, IValidator<CreateProductCommand> validator) : ICommandHandler<CreateProductCommand, CreateProductResult>
+    //l'Handler gestisce la funzionalità principale delegando la responsabilità di validazione alla pipelinde del mediator.
+
+    public class CreateProductCommandHandler (IDocumentSession session, ILogger<CreateProductCommandHandler> logger/*, IValidator<CreateProductCommand> validator*/) 
+                    : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            var result = await validator.ValidateAsync(command, cancellationToken);
-            var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
-            if (errors.Any())
-            {
-                throw new ValidationException(errors.FirstOrDefault());
-            }
+            //var result = await validator.ValidateAsync(command, cancellationToken);       
+            //var errors = result.Errors.Select(x => x.ErrorMessage).ToList();                  Questa parta adesso è gestita dal gestore ValidationBehavior
+            //if (errors.Any())
+            //{
+            //    throw new ValidationException(errors.FirstOrDefault());
+            //}
+
+            logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
 
             var product = new Product
             {
