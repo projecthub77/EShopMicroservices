@@ -1,19 +1,11 @@
-﻿//using Carter;
-//using Mapster;
-//using MediatR;
-
-
-
-
-
-using MediatR;
-
+﻿
 namespace Catalog.API.Products.CreateProduct
-{    
+{
+    //nella Cartella Products con la Vertical Slice Architecture raggruppiamo tutti i casi d'uso di un oggetto.
     public record CreateProductRequest(string Name, List<string> Category, string Description, string ImageFile, decimal Price);
 
     public record CreateProductResponse(Guid Id);
-
+    
     public class CreateProductEndpoint : ICarterModule
     {        
         public void AddRoutes(IEndpointRouteBuilder app)
@@ -34,9 +26,9 @@ namespace Catalog.API.Products.CreateProduct
 
                 //return Results.Created($"/products/{response.Id}", response);  // e si torna al client
             })
-                .WithName("CreateProduct")
-                .Produces<CreateProductResponse>(StatusCodes.Status201Created)
-                .ProducesProblem(StatusCodes.Status400BadRequest)
+                .WithName("CreateProduct")                                      //
+                .Produces<CreateProductResponse>(StatusCodes.Status201Created)  // Carter extension method
+                .ProducesProblem(StatusCodes.Status400BadRequest)               //
                 .WithSummary("Create Product")
                 .WithDescription("Create Product");
         }
