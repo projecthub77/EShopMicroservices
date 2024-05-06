@@ -10,7 +10,7 @@ namespace Catalog.API.Products.UpdateProduct
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/products", async (UpdateProductCommand request, ISender sender) =>
+            app.MapPut("/products", async (UpdateProductRequest request, ISender sender) =>
             {
                 var command = request.Adapt<UpdateProductCommand>();  // mappo la richiesta sull'oggetto CreateProductCommand
                 
