@@ -15,7 +15,7 @@ namespace Basket.API.Basket.StoreBasket
         }
     }
 
-    public class StoreBasketCommandHandler
+    public class StoreBasketCommandHandler(IBasketRepository repository)
                     : ICommandHandler<StoreBasketCommand, StoreBasketResult>
     {
         public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
@@ -31,19 +31,11 @@ namespace Basket.API.Basket.StoreBasket
 
             ShoppingCart cart = command.Cart;
 
-            cart = new ShoppingCart
-            {
-                //Name = command.Name,
-                //Category = command.Category,
-                //Description = command.Description,
-                //ImageFile = command.ImageFile,
-                //Price = command.Price
-            };
+            await repository.StoreBasket(command.Cart, cancellationToken);
 
-            //session.Store(product);
-            //await session.SaveChangesAsync(cancellationToken);
+            
 
-            return new StoreBasketResult("swn");
+            return new StoreBasketResult(command.Cart.UserName);
 
             //throw new NotImplementedException();
         }
