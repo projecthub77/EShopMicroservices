@@ -5,12 +5,13 @@ using System.Text.Json;
 namespace Basket.API.Data
 {
     //Questa classe funge da proxy (pattern) e inoltra le chiamate al repository sottostante. si è utilizzato anche il pattern decorator
+    // aggiungendo questa classe CachedBasketRepository che estende la funzionalità del BasketRepository
 
     public class CachedBasketRepository(IBasketRepository repository, IDistributedCache cache) : IBasketRepository
     {        
         public async Task<ShoppingCart> GetBasket(string userName, CancellationToken cancellationToken = default)
         {
-            var cachedBasket = await cache.GetStringAsync(userName, cancellationToken);  // The IDistributedCache interface provides the following
+            var cachedBasket = await cache.GetStringAsync(userName, cancellationToken);  // The IDistributedCache (for Redis comunication) interface provides the following
                                                                                          // methods to manipulate items in the distributed cache implementation: 
                                                                                          // Get, GetAsync, Set, SetAsync, Refresh, RefreshAsync, Remove, RemoveAsync
             if (!string.IsNullOrEmpty(cachedBasket))
