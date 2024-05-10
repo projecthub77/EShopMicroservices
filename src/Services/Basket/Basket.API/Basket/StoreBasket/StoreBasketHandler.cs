@@ -35,7 +35,7 @@ namespace Basket.API.Basket.StoreBasket
 
             
 
-            return new StoreBasketResult(command.Cart.UserName);
+            return new StoreBasketResult(command.Cart.UserName!);
 
             //throw new NotImplementedException();
         }

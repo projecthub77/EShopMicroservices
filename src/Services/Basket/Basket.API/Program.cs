@@ -19,7 +19,7 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddMarten(opt =>
 {
     opt.Connection(builder.Configuration.GetConnectionString("connStr")!);
-    opt.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+    opt.Schema.For<ShoppingCart>().Identity(x => x.UserName!);
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
