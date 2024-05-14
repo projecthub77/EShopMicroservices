@@ -1,4 +1,6 @@
 ﻿
+using Discount.Grpc;
+
 namespace Basket.API.Basket.StoreBasket
 {
     public record StoreBasketCommand(ShoppingCart Cart)
@@ -14,8 +16,10 @@ namespace Basket.API.Basket.StoreBasket
             RuleFor(x => x.Cart.UserName).NotEmpty().WithMessage("Username is required");
         }
     }
-
-    public class StoreBasketCommandHandler(IBasketRepository repository)
+                                                        // Nel progetto tasto destro su Conected Service/gestisci servizi connessi si associa il file proto
+                                                        // del servizio da chiamare, ad es. Discount, in questo caso noi siamo il client, quindi 
+                                                        // si come tipo selezionaremo Client
+    public class StoreBasketCommandHandler(IBasketRepository repository, DiscountProtoService.DiscountProtoServiceClient discountProto)
                     : ICommandHandler<StoreBasketCommand, StoreBasketResult>
     {
         public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
@@ -28,12 +32,13 @@ namespace Basket.API.Basket.StoreBasket
             //}
 
             //logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);   //Anche questa è centralizzata nel LoggingBehavior
+            foreach(var item in command.Cart.Items)
+            {
+                var coupon = await discountProto.GetDiscountAsync(new GetDiscountRequest { ProductName = item.ProductName }, cancellationToken: cancellationToken);
+                item.Price -= coupon.Amount;                
+            }
 
-            ShoppingCart cart = command.Cart;
-
-            await repository.StoreBasket(command.Cart, cancellationToken);
-
-            
+            await repository.StoreBasket(command.Cart, cancellationToken);            
 
             return new StoreBasketResult(command.Cart.UserName!);
 
