@@ -5,9 +5,18 @@ namespace Ordering.Domain.Abstractions
     {
         private readonly List<IDomainEvent> _domainEvents = new();
         public IReadOnlyList<IDomainEvent> DomainEvents => throw new NotImplementedException();
+
+        public void AddDomaniEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
         public IDomainEvent[] ClearDomainEvents()
         {
-            throw new NotImplementedException();
+            IDomainEvent[] dequeueEvents = _domainEvents.ToArray();
+            _domainEvents.Clear();
+
+            return dequeueEvents;
         }
     }
 }
