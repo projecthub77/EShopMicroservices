@@ -71,3 +71,5 @@ namespace Ordering.Infrastructure.Data.Interceptors
 //Event Drive microservices ----> architettura focalizzata sugli eventi come fonte primaria di comunicazione tra microservizi
 //(maggiore disaccoppiamento, scalabilità e reattività)
 //Outbox Pattern
+//Saga pattern usato per gestire la coerrenza dei dati tra i microservizi in casi di transazioni distribuite, permette di creare un insieme di transazioni
+// se una delle fasi fallisce attiva il rollback
